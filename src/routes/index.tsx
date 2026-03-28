@@ -3,10 +3,10 @@ import { AuthPage } from "../views/AuthPage";
 // import { TitlePage } from "../views/TitlePage";
 import { RegistPage } from "../views/RegistPage";
 // import { MainPage } from "../views/MainPage";
-import { CreatingDocPage } from "../views/CreatingDocPage";
+// import { CreatingDocPage } from "../views/CreatingDocPage";
 import { PublicRoute } from "../components/PublicRoute";
 // import { ProtectedRoute } from "../components/ProtectedRoute";
-import { TemplatePage } from "../views/TemplatePage";
+// import { TemplatePage } from "../views/TemplatePage";
 
 const AppRoutes = () => {
     return (
@@ -22,8 +22,6 @@ const AppRoutes = () => {
                         <RegistPage />
                     </PublicRoute>
                 } />
-                <Route path="/createDoc" element={<CreatingDocPage />} />
-                <Route path="/createTemplate" element={<TemplatePage />} />
             </Routes>
         </BrowserRouter>
     )
