@@ -1,5 +1,9 @@
 pipeline {
     agent any
+
+    when {
+        branch 'main'
+    }
     
     environment {
         GIT_CREDENTIALS_ID = 'git-credentials'
