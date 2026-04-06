@@ -20,8 +20,6 @@ RUN npm run build
 
 FROM nginx:1.29-alpine AS runner
 
-# COPY nginx.conf /etc/nginx/nginx.conf
-
 COPY --chown=nginx:nginx --from=builder /app/dist /usr/share/nginx/html
 
 USER nginx
