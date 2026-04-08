@@ -25,7 +25,9 @@ pipeline {
 
         stage('Just Build') {
             when {
-                branch 'main'
+                not {
+                    branch 'main'
+                }
             }
             environment {
                 IMAGE_NAME = 'frontend-any'
@@ -41,9 +43,7 @@ pipeline {
         
         stage('Build & Push production') {
             when {
-                not {
-                    branch 'main'
-                }
+                branch 'main'
             }
             environment {
                 IMAGE_NAME = 'frontend-prod'
