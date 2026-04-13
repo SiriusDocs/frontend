@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { adminApi } from '../api/SLOP_adminApi'; 
+import { adminApi } from '../api/adminApi'; 
 import type { PendingUser } from '../types/admin';
 
 export const PendingUsersPage: React.FC = () => {
