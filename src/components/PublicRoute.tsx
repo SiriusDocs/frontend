@@ -12,7 +12,7 @@ export const PublicRoute = ({ children }: PublicRouteProps) => {
 
     useEffect(() => {
         if (!isLoading && isAuthenticated) {
-            navigate('/main');
+            navigate('/profile');
         }
     }, [isAuthenticated, isLoading, navigate]);
 
