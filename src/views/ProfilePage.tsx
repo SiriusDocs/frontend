@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { profileApi } from '../api/SLOP_profileApi'; // Укажи свой путь
-import type { UserProfile } from '../types/profile'; // Укажи свой путь
-import profilePic from '../assets/profile.svg'; // Импорт твоей SVG-картинки
+import { profileApi } from '../api/profileApi'; 
+import type { UserProfile } from '../types/profile'; 
+import profilePic from '../assets/profile.svg'; 
 
 export const ProfilePage: React.FC = () => {
     const [profile, setProfile] = useState<UserProfile | null>(null);
