@@ -4,7 +4,7 @@ pipeline {
     environment {
         GIT_CREDENTIALS_ID = 'git-credentials'
         REGISTRY_CREDENTIALS_ID = 'registry-credentials'
-        REGISTRY_URL = 'registry.certsirius.ru/siriusdocs'
+        REGISTRY_URL = 'registry.certsirius.ru'
         IMAGE_TAG = "${env.BUILD_NUMBER}"
         NAMESPACE = "siriusdocs"
     }
