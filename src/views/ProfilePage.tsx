@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { profileApi } from '../api/profileApi'; 
 import type { UserProfile } from '../types/profile'; 
 import profilePic from '../assets/profile.svg'; 
 
-export const ProfilePage: React.FC = () => {
+export const ProfilePage = () => {
     const [profile, setProfile] = useState<UserProfile | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+
+    // пока зашлушка
+    const [notifications, setNotifications] = useState(true)
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -25,7 +28,6 @@ export const ProfilePage: React.FC = () => {
         fetchProfile();
     }, []);
 
-    // Локализация ролей для красивого вывода
     const getRoleName = (role: string) => {
         switch (role.toLowerCase()) {
             case 'teacher': return 'Учитель';
@@ -36,17 +38,15 @@ export const ProfilePage: React.FC = () => {
         }
     };
 
-    // Состояние загрузки (крутилка как в админке)
     if (isLoading) return (
-        <div className="flex flex-col items-center justify-center min-h-[70vh] gap-4 font-montserrat">
-            <div className="w-12 h-12 border-4 border-field-color border-t-accent rounded-full animate-spin"></div>
-            <p className="text-light-gray font-medium text-lg animate-pulse">Загрузка профиля...</p>
+        <div className="flex flex-col items-center justify-center min-h-[70vh] gap-4">
+            <div className="w-12 h-12 border-4 border-slate-200 border-t-teal-500 rounded-full animate-spin"></div>
+            <p className="text-slate-400 font-medium text-lg animate-pulse">Загрузка профиля...</p>
         </div>
     );
 
-    // Состояние ошибки
     if (error) return (
-        <div className="max-w-2xl mx-auto mt-10 p-6 bg-[#6a1a2115] border-l-4 border-error-color text-error-color rounded-r-lg flex items-center gap-3 shadow-sm font-montserrat">
+        <div className="max-w-2xl mx-auto mt-10 p-6 bg-red-50 border-l-4 border-error-color text-error-color rounded-r-lg flex items-center gap-3 shadow-sm">
             <svg className="w-8 h-8 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -54,64 +54,111 @@ export const ProfilePage: React.FC = () => {
         </div>
     );
 
-    // Если данные почему-то пусты
     if (!profile) return null;
 
     return (
-        <div className="min-h-[80vh] flex items-center justify-center p-6 font-montserrat">
-            {/* Убрали transition-all и hover:shadow-xl, теперь это просто карточка */}
-            <div className="w-full max-w-lg bg-white rounded-3xl shadow-lg border border-divider-color overflow-hidden">
-                
-                {/* Декоративная шапка карточки */}
-                <div className="h-32 bg-gradient-to-r from-start-grade-color to-end-grade-color relative"></div>
+        <div className="min-h-screen p-8">
+            {/* Тут должен быть header */}
 
-                <div className="px-8 pb-10 relative">
-                    {/* Аватарка, вылезающая на градиент */}
-                    <div className="flex justify-center -mt-16 mb-6 relative z-10">
-                        <div className="w-32 h-32 bg-white rounded-full p-2 shadow-md border-2 border-selected-color">
-                            <img 
-                                src={profilePic} 
-                                alt="Аватар профиля" 
-                                className="w-full h-full object-cover rounded-full bg-field-color"
+            <div className="max-w-6xl mx-auto mb-8">
+                <h1 className="text-[32px] font-light text-title-color mb-8 font-montserrat">Личный кабинет</h1>
+            </div>
+
+            <div className="bg-white rounded-3xl shadow-md p-12 max-w-6xl mx-auto flex flex-col md:flex-row gap-20">
+                <div className="flex flex-col items-center min-w-[280px]">
+                    <div className="w-64 h-64 bg-field-color rounded-full mb-6 overflow-hidden border border-divider-color shadow-inner flex items-center justify-center overflow-hidden">
+                        <img
+                            src={profilePic}
+                            alt="Avatar"
+                            className="w-[85%] h-[85%] object-cover items-center"
+                        />
+                    </div>
+
+                    <h2 className="text-3xl font-medium text-title-color mb-1 text-center">
+                        {profile.username}
+                    </h2>
+
+                    <p className="text-light-gray text-xl capitalize">
+                        {getRoleName(profile.role)}
+                    </p>
+                </div>
+
+                <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-10">
+                    <div className="flex flex-col">
+                        <label className="text-xl text-creating-lable-color font-medium mb-2">
+                            E-mail
+                        </label>
+                        <div className="rounded-[6px] bg-gradient-to-r from-start-grade-color to-end-grade-color p-[1px] w-full">
+                            <input
+                                type='text'
+                                readOnly  /* пока заглушка */
+                                value={profile.email}
+                                className="w-full h-full rounded-[5px] bg-creating-input-color px-4 py-2.5 text-md outline-none"
                             />
                         </div>
+                        <div className="flex justify-end mt-2">
+                            <button className="bg-gradient-to-r from-start-grade-color to-end-grade-color hover:opacity-90 text-white px-6 py-1.5 rounded-[5px] text-sm font-medium transition-all">
+                                Сменить
+                            </button>
+                        </div>
                     </div>
 
-                    <div className="text-center mb-8">
-                        <h1 className="text-2xl font-bold text-title-color mb-1">{profile.username}</h1>
-                        <p className="text-light-gray text-sm">{profile.email}</p>
+                    <div className="flex flex-col">
+                        <label className="text-xl text-creating-lable-color font-medium mb-2">
+                            Язык по умолчанию
+                        </label>
+                        <div className="rounded-[6px] bg-gradient-to-r from-start-grade-color to-end-grade-color p-[1px] w-full">
+                            <div className="relative h-full">
+                                <select className="w-full h-full rounded-[5px] bg-creating-input-color px-4 py-2.5 text-md outline-none appearance-none cursor-pointer">
+                                    {/*пока зашлушка*/}
+                                    <option>Русский</option>
+                                    <option>English</option>
+                                </select>
+                                <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                                    <svg className="w-5 h-5 text-start-grade-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    {/* Если роль pending — показываем плашку ожидания */}
-                    {profile.role === 'pending' ? (
-                        <div className="bg-selected-color/50 border border-selected-color rounded-2xl p-6 text-center shadow-sm">
-                            <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-sm text-accent">
-                                <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            </div>
-                            <h3 className="text-lg font-semibold text-dark-blue mb-2">Роль не назначена</h3>
-                            <p className="text-light-gray text-sm leading-relaxed">
-                                Ваша учетная запись находится на проверке. 
-                                Пожалуйста, ожидайте, пока администратор назначит вам соответствующую роль.
-                            </p>
+                    <div className="flex flex-col">
+                        <label className="text-xl text-creating-lable-color font-medium mb-2">
+                            Пароль
+                        </label>
+                        <div className="rounded-[6px] bg-gradient-to-r from-start-grade-color to-end-grade-color p-[1px] w-full">
+                            <input
+                                type="password"
+                                value="********"
+                                readOnly
+                                className="w-full h-full rounded-[5px] bg-creating-input-color px-4 py-2.5 text-md outline-none"
+                            />
                         </div>
-                    ) : (
-                        // Иначе выводим подробную информацию
-                        <div className="space-y-4">
-                            <div className="flex items-center justify-between p-4 bg-field-color rounded-xl border border-divider-color">
-                                <span className="text-light-gray text-sm font-medium">Ваша роль</span>
-                                <span className="px-4 py-1.5 bg-gradient-to-r from-start-grade-color to-end-grade-color text-white text-sm font-semibold rounded-lg shadow-sm">
-                                    {getRoleName(profile.role)}
-                                </span>
-                            </div>
+                        <div className="flex justify-end mt-2">
+                            <button className="bg-gradient-to-r from-start-grade-color to-end-grade-color hover:opacity-90 text-white px-6 py-1.5 rounded-[5px] text-sm font-medium transition-all">
+                                Сменить
+                            </button>
+                        </div>
+                    </div>
 
-                            <div className="flex items-center justify-between p-4 bg-field-color rounded-xl border border-divider-color">
-                                <span className="text-light-gray text-sm font-medium">ID Пользователя</span>
-                                <span className="text-dark-blue font-semibold">#{profile.user_id}</span>
-                            </div>
+                    <div className="flex flex-col">
+                        <label className="text-xl text-creating-lable-color font-medium mb-4">
+                            Уведомления
+                        </label>
+                        <div 
+                            onClick={() => setNotifications(!notifications)}
+                            className={`w-16 h-8 flex items-center rounded-full p-1 cursor-pointer transition-all duration-300 ${
+                                notifications ? 'bg-teal-100' : 'bg-gray-200'
+                            }`}
+                        >
+                            <div className={`w-6 h-6 rounded-full shadow-md transform transition-transform duration-300 ${
+                                notifications 
+                                ? 'translate-x-8 bg-gradient-to-r from-start-grade-color to-end-grade-color' 
+                                : 'translate-x-0 bg-white'
+                            }`}></div>
                         </div>
-                    )}
+                    </div>
                 </div>
             </div>
         </div>
