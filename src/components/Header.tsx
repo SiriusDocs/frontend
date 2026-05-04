@@ -1,17 +1,23 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { profileApi } from "../api/profileApi";
+import type { UserProfile } from "../types/profile";
 
 export const Header = () => {
-    const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
-
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [profile, setProfile] = useState<UserProfile | null>(null);
     const { isAuthenticated, logout } = useAuth();
-    {/* Заглушки */}
-    const user = {
-        fisrtName: "Иван",
-        secondName: "Иванов"
-    }
-    {/* Заглушки */}
+    
+    useEffect(() => {
+        if (isAuthenticated) {
+            profileApi.getMe()
+                .then(data => setProfile(data))
+                .catch(err => console.error("Ошибка при загрузки Header: ", err));
+        } else {
+            setProfile(null);
+        }
+    }, [isAuthenticated])
 
     const closeDropdown = () => setIsDropdownOpen(false);
 
@@ -19,6 +25,8 @@ export const Header = () => {
         logout();
         closeDropdown();
     }
+
+    const profileLink = profile?.role === "ADMIN" ? "/adminPanel" : "/profile";
 
     return (
         <div className="header flex p-4 mx-10 my-6 items-center justify-between rounded-2xl shadow-md">
@@ -38,15 +46,15 @@ export const Header = () => {
                 {isAuthenticated ? (
                     <div className="flex items-center">
                         <Link 
-                            to="/profile"
+                            to={profileLink}
                             className="flex items-center transition-all group"
                         >
                             <h3 className="text-on-footer-color text-lg mx-2 group-hover:text-cyan-color transition-colors">
-                                {user.fisrtName} {user.secondName}
+                                {profile ? profile.username : "Загрузка..."}
                             </h3>
 
-                            <div className="mr-12 flex items-center justify-center group-hover:ring-2 group-hover:ring-cyan-color/20 transition-all">
-                                <img className="max-h-[50px] h-8 w-auto cursor-pointer" src="/src/assets/profile.svg" />
+                            <div className="mr-12 flex items-center justify-center rounded-full transition-all group-hover:bg-cyan-color/10">
+                                <img className="max-h-[50px] h-8 w-auto cursor-pointer" src="/src/assets/profile.svg" alt="profile"/>
                             </div>
                         </Link>
                     </div>
@@ -75,24 +83,28 @@ export const Header = () => {
                     />
                     
                     {isDropdownOpen && (
-                        <div className="absolute right-0 top-full mt-4 w-56 bg-white border border-gray-100 rounded-xl shadow-xl z-50 py-2 overflow-hidden">
-                            <Link
-                                to='/contacts'
-                                onClick={closeDropdown}
-                                className="block px-4 py-2 text-on-footer-color hover:text-cyan-color transition-colors"
-                            >
-                                Контакты
-                            </Link>
-
-                            {isAuthenticated && (
-                                <button
-                                    onClick={handleLogout}
-                                    className="w-full text-left px-4 py-2 text-on-footer-color hover:text-cyan-color transition-colors"
+                        <>
+                            <div className="fixed inset-0 z-40" onClick={closeDropdown}></div>
+                            
+                            <div className="absolute right-0 top-full mt-4 w-56 bg-white border border-gray-100 rounded-xl shadow-xl z-50 py-2 overflow-hidden">
+                                <Link
+                                    to='/contacts'
+                                    onClick={closeDropdown}
+                                    className="block px-4 py-2 text-on-footer-color hover:text-cyan-color transition-colors"
                                 >
-                                    Выйти
-                                </button>
-                            )}
-                        </div>
+                                    Контакты
+                                </Link>
+
+                                {isAuthenticated && (
+                                    <button
+                                        onClick={handleLogout}
+                                        className="w-full text-left px-4 py-2 text-on-footer-color hover:text-cyan-color transition-colors"
+                                    >
+                                        Выйти
+                                    </button>
+                                )}
+                            </div>
+                        </>
                     )}
                 </div>
             </div>
