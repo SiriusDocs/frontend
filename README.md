@@ -1,5 +1,7 @@
 # frontend
 
+## Check ci-cd repository for deployment instructions
+
 **Environment variables**
 In the root of the project create .env:
 

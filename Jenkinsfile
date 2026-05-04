@@ -5,8 +5,8 @@ pipeline {
         GIT_CREDENTIALS_ID = 'git-credentials'
         REGISTRY_CREDENTIALS_ID = 'registry-credentials'
         REGISTRY_URL = 'registry.certsirius.ru'
-        IMAGE_NAME = 'frontend-prod'
         IMAGE_TAG = "${env.BUILD_NUMBER}"
+        NAMESPACE = "siriusdocs"
     }
     
     stages {
@@ -22,12 +22,36 @@ pipeline {
                 ])
             }
         }
-        
-        stage('Build & Push') {
+
+        stage('Just Build') {
+            when {
+                not {
+                    branch 'main'
+                }
+            }
+            environment {
+                IMAGE_NAME = 'frontend-any'
+            }
             steps {
                 script {
                     docker.withRegistry("https://${REGISTRY_URL}", env.REGISTRY_CREDENTIALS_ID) {
-                        def customImage = docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
+                        def customImage = docker.build("${NAMESPACE}/${IMAGE_NAME}:${IMAGE_TAG}")
+                    }
+                }
+            }
+        }
+        
+        stage('Build & Push production') {
+            when {
+                branch 'main'
+            }
+            environment {
+                IMAGE_NAME = 'frontend-prod'
+            }
+            steps {
+                script {
+                    docker.withRegistry("https://${REGISTRY_URL}", env.REGISTRY_CREDENTIALS_ID) {
+                        def customImage = docker.build("${NAMESPACE}/${IMAGE_NAME}:${IMAGE_TAG}")
                         customImage.push()
                         customImage.push('latest')
                     }
