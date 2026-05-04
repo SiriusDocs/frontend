@@ -16,6 +16,10 @@
   --color-error-color: #6a1a21;
   --color-title-color: #2e346f;
   --color-input-color: #f1f1f1;
+  --color-creating-lable-color: #2E346F;
+  --color-start-grade-color: #4f46e5;
+  --color-end-grade-color: #189ea0;
+  --color-creating-input-color: #f9fcfc;
 
   --font-montserrat: "Montserrat", sans-serif;
 }

@@ -2,11 +2,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthPage } from "../views/AuthPage";
 // import { TitlePage } from "../views/TitlePage";
 import { RegistPage } from "../views/RegistPage";
-// import { MainPage } from "../views/MainPage";
-// import { CreatingDocPage } from "../views/CreatingDocPage";
+import { CreatingDocPage } from "../views/CreatingDocPage";
 import { PublicRoute } from "../components/PublicRoute";
 // import { ProtectedRoute } from "../components/ProtectedRoute";
 // import { TemplatePage } from "../views/TemplatePage";
+import { PendingUsersPage } from "../views/AdminPage";
+import { ProfilePage } from "../views/ProfilePage";
 
 const AppRoutes = () => {
     return (
@@ -21,6 +22,15 @@ const AppRoutes = () => {
                     <PublicRoute>
                         <RegistPage />
                     </PublicRoute>
+                } />
+                <Route path="/creatingDoc" element={
+                    <CreatingDocPage />
+                } />
+                <Route path="/adminPanel" element={
+                    <PendingUsersPage />
+                } />
+                <Route path="/profile" element={
+                    <ProfilePage />
                 } />
             </Routes>
         </BrowserRouter>
