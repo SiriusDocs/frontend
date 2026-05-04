@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { profileApi } from '../api/profileApi'; 
 import type { UserProfile } from '../types/profile'; 
 import profilePic from '../assets/profile.svg'; 
+import { Header } from '../components/Header';
 
 export const ProfilePage = () => {
     const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -58,7 +59,7 @@ export const ProfilePage = () => {
 
     return (
         <div className="min-h-screen p-8">
-            {/* Тут должен быть header */}
+            <Header />
 
             <div className="max-w-6xl mx-auto mb-8">
                 <h1 className="text-[32px] font-light text-title-color mb-8 font-montserrat">Личный кабинет</h1>
