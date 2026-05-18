@@ -67,7 +67,7 @@ export const ProfilePage = () => {
 
             <div className="bg-white rounded-3xl shadow-md p-12 max-w-6xl mx-auto flex flex-col md:flex-row gap-20">
                 <div className="flex flex-col items-center min-w-[280px]">
-                    <div className="w-64 h-64 bg-field-color rounded-full mb-6 overflow-hidden border border-divider-color shadow-inner flex items-center justify-center overflow-hidden">
+                    <div className="w-64 h-64 bg-field-color rounded-full mb-6 overflow-hidden border border-divider-color shadow-inner flex items-center justify-center">
                         <img
                             src={profilePic}
                             alt="Avatar"
