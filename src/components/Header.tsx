@@ -26,7 +26,7 @@ export const Header = () => {
         closeDropdown();
     }
 
-    const profileLink = profile?.role === "ADMIN" ? "/adminPanel" : "/profile";
+    const profileLink = profile?.role?.toLowerCase() === "admin" ? "/adminPanel" : "/profile";
 
     return (
         <div className="header flex p-4 mx-10 my-6 items-center justify-between rounded-2xl shadow-md">
