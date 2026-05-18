@@ -10,13 +10,27 @@ export const Header = () => {
     const { isAuthenticated, logout } = useAuth();
     
     useEffect(() => {
+        let isActive = true;
+
         if (isAuthenticated) {
             profileApi.getMe()
-                .then(data => setProfile(data))
-                .catch(err => console.error("Ошибка при загрузки Header: ", err));
-        } else {
+                .then(data => {
+                    if (isActive) {
+                        setProfile(data);
+                    }
+                })
+                .catch(err => {
+                    if (isActive) {
+                        console.error("Ошибка при загрузки Header: ", err);
+                    }
+                });
+        } else if (isActive) {
             setProfile(null);
         }
+
+        return () => {
+            isActive = false;
+        };
     }, [isAuthenticated])
 
     const closeDropdown = () => setIsDropdownOpen(false);
