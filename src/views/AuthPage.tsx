@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import profilePic from '../assets/profile.svg';
 
 export const AuthPage = () => {
     const { login } = useAuth();
@@ -54,7 +55,7 @@ export const AuthPage = () => {
                 <div className="flex justify-center mb-6">
                     <img 
                         className="max-h-[40px] h-16 w-auto mb-4" 
-                        src="/src/assets/profile.svg"
+                        src={profilePic}
                     />
                 </div>
 
