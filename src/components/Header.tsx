@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { profileApi } from "../api/profileApi";
 import type { UserProfile } from "../types/profile";
+import profilePic from '../assets/profile.svg';
+import logoPic from '../assets/big-logo.png';
+import menuPic from '../assets/menu.svg';
 
 export const Header = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -45,7 +48,7 @@ export const Header = () => {
     return (
         <div className="header flex p-4 mx-10 my-6 items-center justify-between rounded-2xl shadow-md">
             <div className="flex items-center">
-                <img className="max-h-[35px] w-auto" src="/src/assets/big-logo.png" alt="Logo"/>
+                <img className="max-h-[35px] w-auto" src={logoPic} alt="Logo"/>
                 <nav className="flex p-4 px-12 items-center justify-between bg-white">
                     <Link
                         to="/"
@@ -68,7 +71,7 @@ export const Header = () => {
                             </h3>
 
                             <div className="mr-12 flex items-center justify-center rounded-full transition-all group-hover:bg-cyan-color/10">
-                                <img className="max-h-[50px] h-8 w-auto cursor-pointer" src="/src/assets/profile.svg" alt="profile"/>
+                                <img className="max-h-[50px] h-8 w-auto cursor-pointer" src={profilePic} alt="profile"/>
                             </div>
                         </Link>
                     </div>
@@ -92,7 +95,7 @@ export const Header = () => {
     
                 <div className="relative inline-block">
                     <img 
-                        className="max-h-[20px] w-auto cursor-pointer" src="/src/assets/menu.svg" 
+                        className="max-h-[20px] w-auto cursor-pointer" src={menuPic} 
                         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                     />
                     
