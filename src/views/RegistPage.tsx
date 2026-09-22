@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import { useState, type ChangeEvent, type FormEvent } from "react";
+import { isAxiosError } from "axios";
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 import profilePic from "../assets/profile.svg";
 
 export const RegistPage = () => {
@@ -14,33 +15,34 @@ export const RegistPage = () => {
     });
     const [error, setError] = useState('');
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
         if (error) setError('');
     }
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
 
         try {
             await regist(formData);
             await login({ email: formData.email, password: formData.password} )
-        } catch (err: any){
-            if (err.response) {
-                const status = err.response.status;
-                const message = err.response.data.message;
+        } catch (err) {
+            if (isAxiosError(err)) {
+                const status = err.response?.status;
+                const message = err.response?.data?.message;
 
-                if (status === 500){
+                if (status === 500) {
                     setError('Ошибка сервера. Попробуйте позже')
                 }
-                else if (message && message === 'user already exists'){
+                else if (message === 'user already exists') {
                     setError('Пользователь уже существует')
                 }
-                else if (message && message.includes('min')) {
+                else if (typeof message === 'string' && message.includes('min')) {
                     setError('Пароль слишком короткий (минимум 8 символов)');
                 }
-            } else if (err.request) {
-                setError('Сервер не отвечает')
+                else if (!err.response) {
+                    setError('Сервер не отвечает')
+                }
             } else {
                 setError('Произошла неизвестная ошибка')
             }

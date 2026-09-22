@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 import { profileApi } from "../api/profileApi";
 import type { UserProfile } from "../types/profile";
 import profilePic from '../assets/profile.svg';
@@ -13,23 +13,23 @@ export const Header = () => {
     const { isAuthenticated, logout } = useAuth();
     
     useEffect(() => {
+        if (!isAuthenticated) {
+            return;
+        }
+
         let isActive = true;
 
-        if (isAuthenticated) {
-            profileApi.getMe()
-                .then(data => {
-                    if (isActive) {
-                        setProfile(data);
-                    }
-                })
-                .catch(err => {
-                    if (isActive) {
-                        console.error("Ошибка при загрузки Header: ", err);
-                    }
-                });
-        } else if (isActive) {
-            setProfile(null);
-        }
+        profileApi.getMe()
+            .then(data => {
+                if (isActive) {
+                    setProfile(data);
+                }
+            })
+            .catch(err => {
+                if (isActive) {
+                    console.error("Ошибка при загрузки Header: ", err);
+                }
+            });
 
         return () => {
             isActive = false;

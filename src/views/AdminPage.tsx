@@ -1,7 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { isAxiosError } from 'axios';
 import { adminApi } from '../api/adminApi'; 
 import type { PendingUser } from '../types/admin';
 import { Header } from '../components/Header';
+
+const AVAILABLE_ROLES = ['teacher', 'librarian'];
 
 export const AdminPage = () => {
     const [users, setUsers] = useState<PendingUser[]>([]);
@@ -12,29 +15,28 @@ export const AdminPage = () => {
     const [selectedRoles, setSelectedRoles] = useState<Record<number, string>>({});
     const [assigningUserId, setAssigningUserId] = useState<number | null>(null);
 
-    const AVAILABLE_ROLES = ['teacher', 'librarian'];
-
-    const fetchUsers = async () => {
+    const fetchUsers = useCallback(async () => {
         setIsLoading(true);
         setError(null);
         try {
             const data = await adminApi.getPendingUsers({ limit: 10, offset: 0 });
             setUsers(data.users);
             setTotalCount(data.total_count);
-            
+
             const defaultRoles: Record<number, string> = {};
             data.users.forEach(u => defaultRoles[u.user_id] = AVAILABLE_ROLES[0]);
             setSelectedRoles(defaultRoles);
-        } catch (err: any) {
-            setError(err.response?.data?.message || 'Ошибка при загрузке пользователей');
+        } catch (err) {
+            const message = isAxiosError(err) ? err.response?.data?.message : undefined;
+            setError(message || 'Ошибка при загрузке пользователей');
         } finally {
             setIsLoading(false);
         }
-    };
+    }, []);
 
     useEffect(() => {
         fetchUsers();
-    }, []);
+    }, [fetchUsers]);
 
     const handleRoleChange = (userId: number, role: string) => {
         setSelectedRoles(prev => ({ ...prev, [userId]: role }));
@@ -52,9 +54,10 @@ export const AdminPage = () => {
             });
             setUsers(prev => prev.filter(u => u.user_id !== userId));
             setTotalCount(prev => prev - 1);
-            
-        } catch (err: any) {
-            alert(err.response?.data?.message || 'Ошибка при назначении роли');
+
+        } catch (err) {
+            const message = isAxiosError(err) ? err.response?.data?.message : undefined;
+            alert(message || 'Ошибка при назначении роли');
         } finally {
             setAssigningUserId(null);
         }

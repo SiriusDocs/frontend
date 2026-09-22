@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import { useState, type ChangeEvent, type FormEvent } from "react";
+import { isAxiosError } from "axios";
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 import profilePic from '../assets/profile.svg';
 
 export const AuthPage = () => {
@@ -12,26 +13,26 @@ export const AuthPage = () => {
     });
     const [error, setError] = useState('');
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
         if (error) setError('');
     }
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         try {
             await login( formData )
-        } catch (err: any) {
-            if (err.response) {
-                const status = err.response.status;
+        } catch (err) {
+            if (isAxiosError(err)) {
+                const status = err.response?.status;
 
-                if (status === 401){
+                if (status === 401) {
                     setError('Неверный email или пароль')
-                } else if (status === 500){
+                } else if (status === 500) {
                     setError('Ошибка сервера. Попробуйте позже')
+                } else if (!err.response) {
+                    setError('Сервер не отвечает')
                 }
-            } else if (err.request) {
-                setError('Сервер не отвечает')
             } else {
                 setError('Произошла неизвестная ошибка')
             }

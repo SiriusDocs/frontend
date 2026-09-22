@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { isAxiosError } from 'axios';
 import { profileApi } from '../api/profileApi'; 
 import type { UserProfile } from '../types/profile'; 
 import profilePic from '../assets/profile.svg'; 
@@ -19,8 +20,9 @@ export const ProfilePage = () => {
             try {
                 const data = await profileApi.getMe();
                 setProfile(data);
-            } catch (err: any) {
-                setError(err.response?.data?.message || 'Не удалось загрузить профиль пользователя');
+            } catch (err) {
+                const message = isAxiosError(err) ? err.response?.data?.message : undefined;
+                setError(message || 'Не удалось загрузить профиль пользователя');
             } finally {
                 setIsLoading(false);
             }

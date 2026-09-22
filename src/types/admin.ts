@@ -24,5 +24,6 @@ export interface AssignRoleDto {
 }
 
 export interface AssignRoleResponse {
-    [key: string]: any;
+    status: string;
+    data?: unknown;
 }
